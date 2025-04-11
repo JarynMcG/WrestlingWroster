@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MongoDB Info Display</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .info-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+    h2 { margin-top: 0; }
+    .label { font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <h1 class="h1title">Wrestler Information</h1>
+  <div id="info-container"></div>
+
+  <script>
+    async function fetchInfo() {
+      try {
+        const response = await fetch('http://localhost:5002/api/getInfo');
+        const data = await response.json();
+        const container = document.getElementById('info-container');
+        container.innerHTML = '';
+
+        data.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'info-card';
+          card.innerHTML = `
+            <h2>${item.Name}</h2>
+            <p><span class="label">Email:</span> ${item.Email}</p>
+            <p><span class="label">Nicknames:</span> ${item.Nicknames.join(', ')}</p>
+            <p><span class="label">Social Media:</span> ${item["Social Media Links"].join(', ')}</p>
+            <p><span class="label">Titles:</span> ${item.Titles}</p>
+            <p><span class="label">Stables:</span> ${item.Stables}</p>
+            <p><span class="label">Named Moves:</span> ${item["Named Moves"]}</p>
+            <p><span class="label">Entrance Music:</span> 
+              <a href="${item['Entrance Music']}" target="_blank" rel="noopener noreferrer">
+                ${item['Entrance Music']}
+              </a>
+            </p>            <p><span class="label">Entrance Weight:</span> ${item["Entrance Weight"]}</p>
+            <p><span class="label">Hometown:</span> ${item.Hometown}</p>
+            <p><span class="label">Notes:</span> ${item["Extra broadcast notes"]}</p>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    }
+
+    // Fetch data when the page loads
+    window.onload = fetchInfo;
+  </script>
+</body>
+</html>

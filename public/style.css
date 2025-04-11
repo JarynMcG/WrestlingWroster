@@ -1,0 +1,98 @@
+/* Reset some defaults */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000000;
+    color: #333;
+    line-height: 1.6;
+    padding: 30px;
+  }
+  
+  /* Header */
+  h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #000000;
+  }
+
+  .h1title{
+    color: #ffffff;
+  }
+  
+.dropdownselector{
+    text-align: center;
+    color: #ffffff;
+
+}
+
+#formContainer {
+    display: none;
+    margin-top: 20px;
+  }
+
+  iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+
+  /* Info container layout */
+  #info-container {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 40px;
+
+  }
+  
+.submitbutton{
+    text-align: center;
+
+}
+
+  /* Individual card */
+  .info-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+  }
+  
+  .info-card h2 {
+    font-size: 1.4rem;
+    color: #34495e;
+    margin-bottom: 10px;
+  }
+  
+  .info-card p {
+    margin-bottom: 8px;
+  }
+  
+  .label {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  

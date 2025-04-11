@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WWA4/DWA Roster</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .info-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+    h2 { margin-top: 0; }
+    .label { font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+
+</head>
+<body>
+  <h1 class="h1title">Wrestler Information</h1>
+
+  <div class="dropdownselector">
+  <!-- Search with auto-complete -->
+  <label for="searchInput">Search Wrestler:</label>
+  <input list="wrestlerList" id="searchInput" placeholder="Type or select a name">
+  <datalist id="wrestlerList"></datalist>
+
+  <!-- Optional dropdown -->
+  <label for="wrestlerSelect">Or select from dropdown:</label>
+  <select id="wrestlerSelect">
+    <option value="">-- Choose a Name --</option>
+  </select>
+</div>
+  <!-- Info Card Container -->
+  <div id="info-container"></div>
+
+<div class="submitbutton">
+  <button onclick="toggleForm()">Submit Form</button>
+
+  <div id="formContainer">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScPm4zfEJs3xzu79X8S7W_XPeZ3towySY57I75QKYt7zkSnwQ/viewform?embedded=true">
+      Loading…
+    </iframe>
+  </div>
+</div>
+
+  <script>
+    let allWrestlers = [];
+    let fuse;
+  
+    async function fetchInfo() {
+      try {
+        const response = await fetch('http://localhost:5002/api/getInfo');
+        const data = await response.json();
+        allWrestlers = data;
+  
+        const select = document.getElementById('wrestlerSelect');
+        const datalist = document.getElementById('wrestlerList');
+        const searchInput = document.getElementById('searchInput');
+        const container = document.getElementById('info-container');
+  
+        const uniqueNames = [...new Set(data.map(w => w.Name))];
+  
+        // Fill datalist for native autocomplete
+        uniqueNames.forEach(name => {
+          const option = document.createElement('option');
+          option.value = name;
+          datalist.appendChild(option);
+        });
+  
+        // Fill dropdown
+        uniqueNames.forEach(name => {
+          const option = document.createElement('option');
+          option.value = name;
+          option.textContent = name;
+          select.appendChild(option);
+        });
+  
+        // Set up Fuse.js
+        fuse = new Fuse(data, {
+          keys: ['Name'],
+          threshold: 0.4, // fuzzy strength (0 = exact, 1 = very fuzzy)
+        });
+  
+        // Live fuzzy search on input
+        searchInput.addEventListener('input', () => {
+          const query = searchInput.value.trim();
+          container.innerHTML = '';
+  
+          if (!query) return;
+  
+          const result = fuse.search(query);
+          if (result.length > 0) {
+            displayWrestler(result[0].item);
+          }
+        });
+  
+        // Dropdown change
+        select.addEventListener('change', () => {
+          const selectedName = select.value;
+          searchInput.value = selectedName;
+          const wrestler = allWrestlers.find(w => w.Name === selectedName);
+          if (wrestler) {
+            displayWrestler(wrestler);
+          }
+        });
+  
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        document.getElementById('info-container').innerHTML = '<p style="color:red;">Error loading data.</p>';
+      }
+    }
+  
+    function displayWrestler(wrestler) {
+      const container = document.getElementById('info-container');
+      container.innerHTML = '';
+  
+      const card = document.createElement('div');
+      card.className = 'info-card';
+      card.innerHTML = `
+        <h2>${wrestler.Name}</h2>
+        <p><span class="label">Email:</span> ${wrestler.Email || 'N/A'}</p>
+        <p><span class="label">Nicknames:</span> ${wrestler.Nicknames?.join(', ') || 'None'}</p>
+        <p><span class="label">Social Media:</span> ${wrestler["Social Media Links"]?.join(', ') || 'None'}</p>
+        <p><span class="label">Titles:</span> ${wrestler.Titles || 'None'}</p>
+        <p><span class="label">Stables:</span> ${wrestler.Stables || 'None'}</p>
+        <p><span class="label">Named Moves:</span> ${wrestler["Named Moves"] || 'None'}</p>
+        <p><span class="label">Entrance Music:</span> 
+          <a href="${wrestler['Entrance Music']}" target="_blank" rel="noopener noreferrer">
+            ${wrestler['Entrance Music']}
+          </a>
+        </p>
+        <p><span class="label">Entrance Weight:</span> ${wrestler["Entrance Weight"] || 'N/A'}</p>
+        <p><span class="label">Hometown:</span> ${wrestler.Hometown || 'N/A'}</p>
+        <p><span class="label">Notes:</span> ${wrestler["Extra broadcast notes"] || 'None'}</p>
+      `;
+      container.appendChild(card);
+    }
+  
+    window.onload = fetchInfo;
+
+        function toggleForm() {
+      const form = document.getElementById('formContainer');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+
+  </script>
+  
+
+
+</body>
+
+</html>
+
