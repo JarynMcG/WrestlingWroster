@@ -14,7 +14,7 @@
 
 </head>
 <body>
-  <h1 class="h1title">Wrestler Information</h1>
+  <h1 class="h1title">Roster Info</h1>
 
   <div class="dropdownselector">
   <!-- Search with auto-complete -->
@@ -25,20 +25,29 @@
   <!-- Optional dropdown -->
   <label for="wrestlerSelect">Or select from dropdown:</label>
   <select id="wrestlerSelect">
-    <option value="">-- Choose a Name --</option>
+    <option value="">-- Type a Name --</option>
   </select>
 </div>
   <!-- Info Card Container -->
   <div id="info-container"></div>
 
 <div class="submitbutton">
-  <button onclick="toggleForm()">Submit Form</button>
-
-  <div id="formContainer">
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScPm4zfEJs3xzu79X8S7W_XPeZ3towySY57I75QKYt7zkSnwQ/viewform?embedded=true">
-      Loading…
-    </iframe>
-  </div>
+  <div id="submitformContainer">
+    <h3 class="h1title">Submit a new Roster Form</h3>
+    <button onclick="toggleForm('form1')">Submit Form </button>
+    <div id="form1" class="form-container">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScPm4zfEJs3xzu79X8S7W_XPeZ3towySY57I75QKYt7zkSnwQ/viewform?embedded=true">
+        Loading…
+      </iframe>
+    </div>
+  <div class="padding"></div>
+  <h3 class="h1title">Give production a suggestion or leave feedback</h3>
+    <button onclick="toggleForm('form2')">Suggestion Box</button>
+    <div id="form2" class="form-container">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfYrBHERzXC4f6PfdgQqPl_PEeFhT_FV6ahAcB0b3Wqq_Zy9A/viewform?embedded=true">
+        Loading…
+      </iframe>
+    </div>
 </div>
 
   <script>
@@ -136,10 +145,12 @@
   
     window.onload = fetchInfo;
 
-        function toggleForm() {
-      const form = document.getElementById('formContainer');
+
+    function toggleForm(formId) {
+      const form = document.getElementById(formId);
       form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
+
 
 
   </script>
