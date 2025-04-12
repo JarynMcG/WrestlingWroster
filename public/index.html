@@ -11,12 +11,13 @@
   </style>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
 <body>
   <nav class="navbar">
-    <a href="index.html">Roster</a>
-    <a href="matchcard.html">Match Card Builder</a>
+    <a href="index.html" class="${location.pathname.includes('index') ? 'active' : ''}">Roster</a>
+    <a href="matchcard.html" class="${location.pathname.includes('matchcard') ? 'active' : ''}">Match Card</a>
   </nav>
   <img src="images/wwa4-logo.PNG" alt="WWA4 Logo" class="header-logo">
   <h1 class="h1title"> Roster Info</h1>
@@ -156,12 +157,15 @@ const uniqueNames = [...new Set(data.map(w => w.Name))].sort((a, b) => a.localeC
     }
 
 
+        // Highlight the active nav link
+        const navLinks = document.querySelectorAll('.navbar a');
+        navLinks.forEach(link => {
+          if (window.location.pathname.includes(link.getAttribute('href'))) {
+            link.classList.add('active');
+          }
+        });
 
   </script>
-  
-
 
 </body>
-
 </html>
-

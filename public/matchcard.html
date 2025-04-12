@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Match Card Builder</title>
+  <title>Match Card</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
@@ -11,11 +11,13 @@
     #matchList { margin-top: 20px; }
     #saveBtn { margin-top: 20px; }
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
     <nav class="navbar">
-        <a href="index.html">Roster</a>
-        <a href="matchcard.html">Match Card Builder</a>
+        <a href="index.html" class="${location.pathname.includes('index') ? 'active' : ''}">Roster</a>
+        <a href="matchcard.html" class="${location.pathname.includes('matchcard') ? 'active' : ''}">Match Card</a>
       </nav>
   <h1>Match Card Builder</h1>
 
@@ -124,6 +126,13 @@ const sortable = new Sortable(document.getElementById('matchList'), {
     }
   });
 
+      // Highlight the active nav link
+      const navLinks = document.querySelectorAll('.navbar a');
+      navLinks.forEach(link => {
+        if (window.location.pathname.includes(link.getAttribute('href'))) {
+          link.classList.add('active');
+        }
+      });
   
   </script>
 </body>
