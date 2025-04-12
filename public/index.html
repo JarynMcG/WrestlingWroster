@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>WWA4/DWA Roster</title>
+  <title>WWA4 Roster</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     .info-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
@@ -14,7 +14,12 @@
 
 </head>
 <body>
-  <h1 class="h1title">Roster Info</h1>
+  <nav class="navbar">
+    <a href="index.html">Roster</a>
+    <a href="matchcard.html">Match Card Builder</a>
+  </nav>
+  <img src="images/wwa4-logo.PNG" alt="WWA4 Logo" class="header-logo">
+  <h1 class="h1title"> Roster Info</h1>
 
   <div class="dropdownselector">
   <!-- Search with auto-complete -->
@@ -65,7 +70,7 @@
         const searchInput = document.getElementById('searchInput');
         const container = document.getElementById('info-container');
   
-        const uniqueNames = [...new Set(data.map(w => w.Name))];
+const uniqueNames = [...new Set(data.map(w => w.Name))].sort((a, b) => a.localeCompare(b));
   
         // Fill datalist for native autocomplete
         uniqueNames.forEach(name => {
@@ -125,7 +130,6 @@
       card.className = 'info-card';
       card.innerHTML = `
         <h2>${wrestler.Name}</h2>
-        <p><span class="label">Email:</span> ${wrestler.Email || 'N/A'}</p>
         <p><span class="label">Nicknames:</span> ${wrestler.Nicknames?.join(', ') || 'None'}</p>
         <p><span class="label">Social Media:</span> ${wrestler["Social Media Links"]?.join(', ') || 'None'}</p>
         <p><span class="label">Titles:</span> ${wrestler.Titles || 'None'}</p>

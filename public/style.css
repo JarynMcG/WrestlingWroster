@@ -20,6 +20,13 @@
     color: #000000;
   }
 
+  .header-logo {
+    width: 200px; /* adjust to any size you want */
+    height: auto;
+    display: block;
+    margin: 0 auto auto;
+  }
+  
   .h1title{
     color: #ffffff;
   }
@@ -104,3 +111,30 @@ button {
     color: #2c3e50;
   }
   
+
+  .match {
+    cursor: move;
+    transition: background 0.2s ease;
+  }
+  
+  .match:hover {
+    background-color: #f0f0f0;
+  }
+
+  .navbar {
+    background-color: #222;
+    padding: 10px 20px;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .navbar a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar a:hover {
+    text-decoration: underline;
+  }

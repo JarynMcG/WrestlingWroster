@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Match Card Builder</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <style>
+    .match { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 6px; background: #f9f9f9; }
+    .match input, .match select { margin: 5px; }
+    #matchList { margin-top: 20px; }
+    #saveBtn { margin-top: 20px; }
+  </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html">Roster</a>
+        <a href="matchcard.html">Match Card Builder</a>
+      </nav>
+  <h1>Match Card Builder</h1>
+
+  <button onclick="addMatch()">+ Add Match</button>
+  <div id="matchList"></div>
+  <button id="saveBtn" onclick="saveMatchCard()">Save Match Card</button>
+
+  <script>
+    let matches = [];
+
+    function addMatch() {
+      const index = matches.length;
+      matches.push({
+        matchType: '',
+        participants: '',
+        timeAllocated: '',
+        order: index + 1,
+        notes: ''
+      });     
+      renderMatches();
+    }
+
+    function renderMatches() {
+      const list = document.getElementById('matchList');
+      list.innerHTML = '';
+
+      matches.forEach((match, i) => {
+        const div = document.createElement('div');
+        div.className = 'match';
+        div.setAttribute('data-index', i);
+        div.innerHTML = `
+          <label>Order: <input type="number" value="${match.order}" onchange="updateMatch(${i}, 'order', this.value)"></label><br>
+          <label>Match Type: 
+            <select onchange="updateMatch(${i}, 'matchType', this.value)">
+              <option value="">-- Select --</option>
+              <option value="Singles">Singles</option>
+              <option value="Tag Team">Tag Team</option>
+              <option value="Battle Royal">Battle Royal</option>
+              <option value="Gauntlet">Other</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <br>
+          <label>Participants: <input type="text" value="${match.participants}" onchange="updateMatch(${i}, 'participants', this.value)"></label><br>
+          <label>Time Allocated: <input type="text" value="${match.timeAllocated}" onchange="updateMatch(${i}, 'timeAllocated', this.value)"></label><br>
+          <label>Notes: <br>
+            <textarea rows="3" style="width: 100%;" onchange="updateMatch(${i}, 'notes', this.value)">${match.notes || ''}</textarea>
+          </label>
+          <button onclick="deleteMatch(${i})" style="margin-top: 10px; background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Delete</button>
+
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function updateMatch(index, key, value) {
+      matches[index][key] = value;
+    }
+
+    async function saveMatchCard() {
+        console.log(matches); 
+        await fetch('/api/matchcard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ matches })
+        });
+        alert('Match card saved!');
+      }
+      
+      function deleteMatch(index) {
+        if (confirm('Are you sure you want to delete this match?')) {
+          matches.splice(index, 1);
+          renderMatches();
+        }
+      }
+
+    // Load existing match card
+    async function loadMatchCard() {
+      const res = await fetch('/api/matchcard');
+      const data = await res.json();
+      matches = data.matches || [];
+      renderMatches();
+    }
+
+    window.onload = loadMatchCard;
+// Enable drag-and-drop reordering
+const sortable = new Sortable(document.getElementById('matchList'), {
+    animation: 150,
+    onEnd: function () {
+      const newOrder = [];
+      const items = document.querySelectorAll('#matchList .match');
+  
+      items.forEach((item, index) => {
+        const i = parseInt(item.getAttribute('data-index'));
+        newOrder.push(matches[i]);
+      });
+  
+      matches = newOrder;
+  
+      // Reassign order numbers
+      matches.forEach((m, i) => {
+        m.order = i + 1;
+      });
+  
+      renderMatches(); // re-render to reflect updated order numbers
+    }
+  });
+
+  
+  </script>
+</body>
+</html>

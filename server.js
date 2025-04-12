@@ -48,6 +48,69 @@ app.get('/api/getInfo', async (req, res) => {
     }
 });
 
+
+// Match card handling
+
+  
+
+const MatchCard = mongoose.model('MatchCard', {
+    matches: [
+      {
+        matchType: String,
+        participants: String,
+        timeAllocated: String,
+        order: Number,
+        notes: String 
+      }
+    ],
+    lastUpdated: Date
+  });
+  
+
+  app.get('/api/matchcard', async (req, res) => {
+    const doc = await MatchCard.findOne().sort({ lastUpdated: -1 });
+    res.json(doc || { matches: [] });
+  });
+  
+  app.post('/api/matchcard', async (req, res) => {
+    const matchCard = new MatchCard({
+      matches: req.body.matches,
+      lastUpdated: new Date()
+    });
+    await matchCard.save();
+    res.json({ message: 'Saved' });
+  });
+  
+
+// GET the latest saved match card
+app.get('/api/matchcard', async (req, res) => {
+    try {
+      const matchCard = await MatchCard.findOne().sort({ lastUpdated: -1 });
+      res.json(matchCard || { matches: [] });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch match card.' });
+    }
+  });
+  
+  // POST a new match card
+  app.post('/api/matchcard', async (req, res) => {
+    try {
+      const matchCard = new MatchCard({
+        matches: req.body.matches,
+        lastUpdated: new Date()
+      });
+      await matchCard.save();
+      res.json({ message: 'Match card saved successfully' });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to save match card.' });
+    }
+  });
+  
+
+  mongoose.connect(mongoURI, {})
+  .then(() => console.log("Connected to MongoDB"))
+  .catch(err => console.error("MongoDB connection error:", err));
+
 // Start server
 app.listen(5002, () => {
     console.log('Server running at http://localhost:5002');
