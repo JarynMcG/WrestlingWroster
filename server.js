@@ -112,6 +112,7 @@ app.get('/api/matchcard', async (req, res) => {
   .catch(err => console.error("MongoDB connection error:", err));
 
 // Start server
-app.listen(5002, () => {
-    console.log('Server running at http://localhost:5002');
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
